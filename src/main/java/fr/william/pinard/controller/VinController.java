@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.william.pinard.model.Vin;
+import fr.william.pinard.model.Vin.choix;
+import fr.william.pinard.model.VinPK;
 import fr.william.pinard.repository.VinRepository;
 
 @Controller
@@ -28,7 +30,7 @@ public class VinController {
 		v1.setCodeProduit(765439);
 		v1.setDesignation("Les Hauts du Tertre 1999");
 		v1.setRegion("Bordeaux (Margaux)");
-		v1.setCouleur("rouge");
+		v1.setCouleur(choix.ROUGE);
 		v1.setPrix(11.50);
 		v1.setRemise(0);
 		v1.setQuantite(2);
@@ -37,7 +39,7 @@ public class VinController {
 		v2.setCodeProduit(543289);
 		v2.setDesignation("Château Marquis de Terme 1998");
 		v2.setRegion("Bordeaux (Margaux)");
-		v2.setCouleur("rouge");
+		v2.setCouleur(choix.ROUGE);
 		v2.setPrix(19.00);
 		v2.setRemise(0);
 		v2.setQuantite(3);
@@ -46,7 +48,7 @@ public class VinController {
 		v3.setCodeProduit(782377);
 		v3.setDesignation("Clos du Marquis 1999");
 		v3.setRegion("Bordeaux (Saint-Julien)");
-		v3.setCouleur("rouge");
+		v3.setCouleur(choix.ROUGE);
 		v3.setPrix(22.90);
 		v3.setRemise(0);
 		v3.setQuantite(15);
@@ -55,7 +57,7 @@ public class VinController {
 		v4.setCodeProduit(974534);
 		v4.setDesignation("Clos du Baron 1998");
 		v4.setRegion("Bordeaux (Saint-Julien)");
-		v4.setCouleur("blanc");
+		v4.setCouleur(choix.BLANC);
 		v4.setPrix(45.20);
 		v4.setRemise(0);
 		v4.setQuantite(54);
@@ -74,7 +76,7 @@ public class VinController {
 		System.out.println("ajout du produit v4 : "+v4);
 		ajoutVin(v4);
 
-		updateQuantite(v4.getCodeProduit(),50);
+		updateQuantite(new VinPK(v4.getCodeProduit(), v4.getDesignation()),50);
 
 		System.out.println("liste des vins enregistrés :");
 		Collection<Vin> vins=findAll();
@@ -85,7 +87,7 @@ public class VinController {
 		}
 
 		System.out.println("suppression du vin "+v3);
-		deleteVin(782377);
+		deleteVin(new VinPK(v3.getCodeProduit(), v3.getDesignation()));
 
 
 
@@ -102,13 +104,12 @@ public class VinController {
 
 	
 
-	public Optional<Vin> findByCodeProduit(Integer codeProduit){
-		return vinRepository.findById(codeProduit);
+	public Optional<Vin> findByCodeProduit(VinPK cleProduit){
+		return vinRepository.findById(cleProduit);
 	}
 	/**
 	 * Retourne tous les produits dans une liste
 	 */
-	@SuppressWarnings("unchecked")
 	public Collection<Vin> findAll(){
 
 		return vinRepository.findAll();
@@ -130,15 +131,15 @@ public class VinController {
 	 * Méthode qui détruit un objet de type Vin en fonction de son code
 	 * et si ce dernier existe !
 	 */
-	public void deleteVin (Integer codeProduit){
+	public void deleteVin (VinPK cleProduit){
 		
-		vinRepository.delete(vinRepository.getById(codeProduit));
+		vinRepository.delete(vinRepository.getById(cleProduit));
 	}
 
 	/**
 	 * Met à jour la quantité d'un objet de type Vin
 	 */
-	public void updateQuantite(Integer codeProduit, int quantite){
-		(vinRepository.getById(codeProduit)).setQuantite(quantite);
+	public void updateQuantite(VinPK cleProduit, int quantite){
+		(vinRepository.getById(cleProduit)).setQuantite(quantite);
 	}
 }

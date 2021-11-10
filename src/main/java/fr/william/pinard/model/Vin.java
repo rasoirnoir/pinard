@@ -2,23 +2,33 @@ package fr.william.pinard.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 
 import lombok.Data;
 
 @Entity
 @Data
+@IdClass(value=VinPK.class)
 public class Vin {
 
+	public enum choix {ROUGE, BLANC, ROSE};
+	
 	@Id
 	private Integer codeProduit;
 	
+	@Id
 	private String designation;
 	
 	private String region;
 	
-	private String couleur;
+	@Enumerated(value = EnumType.STRING)
+	@Column(length = 5)
+	private choix couleur;
 	
 	private double prix;
 	
@@ -50,11 +60,11 @@ public class Vin {
 		this.region = region;
 	}
 
-	public String getCouleur() {
+	public choix getCouleur() {
 		return couleur;
 	}
 
-	public void setCouleur(String couleur) {
+	public void setCouleur(choix couleur) {
 		this.couleur = couleur;
 	}
 

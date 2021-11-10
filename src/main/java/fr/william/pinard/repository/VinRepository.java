@@ -4,8 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import fr.william.pinard.model.Vin;
+import fr.william.pinard.model.VinPK;
 
 @Repository
-public interface VinRepository extends JpaRepository<Vin, Integer> {
+public interface VinRepository extends JpaRepository<Vin, VinPK> {
 
 }
