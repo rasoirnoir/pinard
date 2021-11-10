@@ -3,26 +3,31 @@ package fr.william.pinard.model;
 import java.util.Objects;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
 @Entity
 @Data
-@IdClass(value=VinPK.class)
 public class Vin {
 
 	public enum choix {ROUGE, BLANC, ROSE};
 	
-	@Id
-	private Integer codeProduit;
+//	@Id
+//	private Integer codeProduit;
+//	
+//	@Id
+//	private String designation;
 	
-	@Id
-	private String designation;
+	@EmbeddedId
+	public VinPK vinPK;
+	
 	
 	private String region;
 	
@@ -36,20 +41,30 @@ public class Vin {
 	
 	private int quantite;
 
+	public VinPK getVinPK() {
+		return vinPK;
+	}
+
+	public void setVinPK(VinPK vinPK) {
+		this.vinPK = vinPK;
+	}
+
+	@Transient
 	public Integer getCodeProduit() {
-		return codeProduit;
+		return vinPK.getCodeProduit();
 	}
 
 	public void setCodeProduit(Integer codeProduit) {
-		this.codeProduit = codeProduit;
+		this.vinPK.setCodeProduit(codeProduit);
 	}
 
+	@Transient
 	public String getDesignation() {
-		return designation;
+		return vinPK.getDesignation();
 	}
 
 	public void setDesignation(String designation) {
-		this.designation = designation;
+		this.vinPK.setDesignation(designation);
 	}
 
 	public String getRegion() {
@@ -92,33 +107,6 @@ public class Vin {
 		this.quantite = quantite;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(codeProduit, couleur, designation, prix, quantite, region, remise);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Vin other = (Vin) obj;
-		return Objects.equals(codeProduit, other.codeProduit) && Objects.equals(couleur, other.couleur)
-				&& Objects.equals(designation, other.designation)
-				&& Double.doubleToLongBits(prix) == Double.doubleToLongBits(other.prix) && quantite == other.quantite
-				&& Objects.equals(region, other.region)
-				&& Double.doubleToLongBits(remise) == Double.doubleToLongBits(other.remise);
-	}
-
-	@Override
-	public String toString() {
-		return "Vin [codeProduit=" + codeProduit + ", designation=" + designation + ", region=" + region + ", couleur="
-				+ couleur + ", prix=" + prix + ", remise=" + remise + ", quantite=" + quantite + "]";
-	}
-	
 	
 	
 }

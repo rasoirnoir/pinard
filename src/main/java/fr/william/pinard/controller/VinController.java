@@ -27,8 +27,8 @@ public class VinController {
 	public String home(){
 		
 		Vin v1=new Vin();
-		v1.setCodeProduit(765439);
-		v1.setDesignation("Les Hauts du Tertre 1999");
+		VinPK pk1=new VinPK(777777,"Les Hauts du Tertre 1999");
+        v1.setVinPK(pk1);
 		v1.setRegion("Bordeaux (Margaux)");
 		v1.setCouleur(choix.ROUGE);
 		v1.setPrix(11.50);
@@ -36,17 +36,17 @@ public class VinController {
 		v1.setQuantite(2);
 
 		Vin v2=new Vin();
-		v2.setCodeProduit(543289);
-		v2.setDesignation("Château Marquis de Terme 1998");
+		VinPK pk2=new VinPK(888888,"Château Marquis de Terme 1998");
+		v2.setVinPK(pk2);
 		v2.setRegion("Bordeaux (Margaux)");
-		v2.setCouleur(choix.ROUGE);
+		v2.setCouleur(choix.BLANC);
 		v2.setPrix(19.00);
 		v2.setRemise(0);
 		v2.setQuantite(3);
 
 		Vin v3=new Vin();
-		v3.setCodeProduit(782377);
-		v3.setDesignation("Clos du Marquis 1999");
+		VinPK pk3=new VinPK(999999,"Clos du Marquis 1999");
+		v3.setVinPK(pk3);
 		v3.setRegion("Bordeaux (Saint-Julien)");
 		v3.setCouleur(choix.ROUGE);
 		v3.setPrix(22.90);
@@ -54,13 +54,13 @@ public class VinController {
 		v3.setQuantite(15);
 
 		Vin v4=new Vin();
-		v4.setCodeProduit(974534);
-		v4.setDesignation("Clos du Baron 1998");
+		VinPK pk4=new VinPK(111111,"Clos du Baron 1998");
+		v4.setVinPK(pk4);
 		v4.setRegion("Bordeaux (Saint-Julien)");
 		v4.setCouleur(choix.BLANC);
 		v4.setPrix(45.20);
 		v4.setRemise(0);
-		v4.setQuantite(54);
+		v4.setQuantite(50);
 
 
 		System.out.println("ajout du produit v1 : "+v1);
@@ -70,37 +70,55 @@ public class VinController {
 		ajoutVin(v2);
 
 		System.out.println("ajout du produit v3 : "+v3);
-		ajoutVin(v3);
+		v3=ajoutVin(v3);
 		v3.setQuantite(10);
+		updateVin(v3);
 
 		System.out.println("ajout du produit v4 : "+v4);
 		ajoutVin(v4);
 
-		updateQuantite(new VinPK(v4.getCodeProduit(), v4.getDesignation()),50);
+		updateQuantite(pk4,30);
 
-		System.out.println("liste des vins enregistrés :");
-		Collection<Vin> vins=findAll();
-		Iterator<Vin> it=vins.iterator();
-		while(it.hasNext())
-		{
-			System.out.println(it.next());
-		}
-
-		System.out.println("suppression du vin "+v3);
-		deleteVin(new VinPK(v3.getCodeProduit(), v3.getDesignation()));
-
-
-
-		System.out.println("liste des vins enregistrés:");
-		vins = findAll();
-		it=vins.iterator();
-		while(it.hasNext())
-		{
-			System.out.println(it.next());
-		}
-		
-		return "<h1>Regardez dans votre console et dans votre base de données MySQL <strong>JPA</strong></h1>";
+		StringBuilder sb = new StringBuilder();
+		sb.append("<h1>Regardez dans votre console et dans votre base de données MySQL <strong>JPA</strong></h1>");
+		sb.append("<a href='http://localhost:8080/vins'>Voir la liste des vins enregistrés</a>");
+		return  sb.toString();
 	}
+
+	
+
+	public Optional<Vin> findById(VinPK vinPk){
+		return vinRepository.findById(vinPk);
+	}
+	/**
+	 * Retourne tous les produits dans une liste
+	 */
+	@GetMapping("/vins")
+	public Collection<Vin> findAll(){
+
+		return vinRepository.findAll();
+	}
+	/**
+	 * Ajoute un vin
+	 */
+	public Vin ajoutVin(Vin vin){
+		return vinRepository.save(vin);
+	}
+	/**
+	 * Met un jour un enregistrement pour un objet Vin
+	 */
+	public Vin updateVin(Vin vin){
+		return vinRepository.save(vin);
+	}
+
+
+	/**
+	 * Met à jour la quantité d'un objet de type Vin
+	 */
+	public void updateQuantite(VinPK vinPk, int quantite){
+		(vinRepository.getById(vinPk)).setQuantite(quantite);
+	}
+
 
 	
 
